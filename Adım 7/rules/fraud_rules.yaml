@@ -1,0 +1,250 @@
+meta:
+  version: "1.0"
+  description: "IEEE-CIS Fraud Detection — Rule Engine Config"
+  conflict_resolution: "max_multiplier"   # tüm kurallar çalışır, max multiplier kazanır
+  default_multiplier: 1.0
+
+rules:
+
+  - id: R001
+    name: "high_value_night_foreign_email"
+    description: >
+      Gece vakti (22:00-06:00), yüksek tutarlı işlem ve yabancı e-posta domain'i
+      kombinasyonu — klasik card-not-present fraud sinyali.
+    priority: 1
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: tx_is_night
+          op: "=="
+          value: 1
+        - field: TransactionAmt
+          op: ">="
+          value: 500.0
+        - field: ctx_pemaildomain_fraud_lift
+          op: ">="
+          value: 1.2
+    action:
+      multiplier: 1.50
+      rule_flag: "HIGH_VALUE_NIGHT_FOREIGN"
+      severity: "HIGH"
+      explanation: >
+        Gece saatinde yüksek tutarlı işlem + riskli e-posta domain'i tespit edildi.
+        Bu kombinasyon fraud olasılığını belirgin biçimde artırır.
+
+  - id: R002
+    name: "velocity_spike_high_amount"
+    description: >
+      Kısa sürede çok sayıda işlem (velocity spike) + yüksek tutar.
+      Hesap ele geçirilmesi veya kart klonlama senaryosu.
+    priority: 1
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: card1_velocity_1d
+          op: ">="
+          value: 15.0
+        - field: TransactionAmt
+          op: ">="
+          value: 300.0
+    action:
+      multiplier: 1.45
+      rule_flag: "VELOCITY_SPIKE_HIGH_AMT"
+      severity: "HIGH"
+      explanation: >
+        Günlük işlem hızı anormalin üzerinde ve tutar yüksek.
+        Hız + tutar kombinasyonu kart klonlama veya hesap ele geçirme işaret eder.
+
+  - id: R003
+    name: "risky_card_type"
+    description: >
+      Yüksek fraud lift'e sahip kart tipi (card4 bazlı).
+      Belirli kart ağlarında fraud oranı anlamlı şekilde yüksek.
+    priority: 2
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: ctx_card4_fraud_lift
+          op: ">="
+          value: 1.3
+        - field: TransactionAmt
+          op: ">="
+          value: 100.0
+    action:
+      multiplier: 1.35
+      rule_flag: "RISKY_CARD_TYPE"
+      severity: "MEDIUM"
+      explanation: >
+        Kullanılan kart ağı bu veri setinde yüksek fraud lift'e sahip.
+        Orta-yüksek tutarla birleşince risk artar.
+
+  - id: R004
+    name: "risky_card_product_type"
+    description: >
+      card6 (credit/debit/charge) bazlı yüksek risk skoru.
+      Belirli ürün tipi + tutar kombinasyonu.
+    priority: 2
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: ctx_card6_fraud_lift
+          op: ">="
+          value: 1.25
+        - field: TransactionAmt
+          op: ">="
+          value: 150.0
+    action:
+      multiplier: 1.30
+      rule_flag: "RISKY_CARD_PRODUCT"
+      severity: "MEDIUM"
+      explanation: >
+        Kart ürün tipi (credit/debit sınıflandırması) yüksek fraud lift gösteriyor.
+        Tutar eşiğiyle birleşince kural tetiklendi.
+
+  - id: R005
+    name: "amount_zscore_extreme"
+    description: >
+      İşlem tutarı bu entity'nin tarihsel ortalamasından 3 standart sapma uzakta.
+      Anormal tutar davranışı — hesap compromise veya test işlemi sinyali.
+    priority: 1
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: card1_amt_zscore
+          op: ">="
+          value: 3.0
+    action:
+      multiplier: 1.40
+      rule_flag: "AMT_ZSCORE_EXTREME"
+      severity: "HIGH"
+      explanation: >
+        İşlem tutarı bu karta ait tarihsel örüntüden aşırı sapıyor (z-score ≥ 3.0).
+        Entity davranışından bu kadar sapma yüksek risk işareti.
+
+  - id: R006
+    name: "weekend_high_value_risky_product"
+    description: >
+      Hafta sonu + yüksek tutar + riskli ProductCD kombinasyonu.
+      Hafta sonu yüksek tutarlı alışveriş bazı sektörlerde fraud göstergesi.
+    priority: 2
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: tx_is_weekend
+          op: "=="
+          value: 1
+        - field: TransactionAmt
+          op: ">="
+          value: 400.0
+        - field: ctx_productcd_fraud_lift
+          op: ">="
+          value: 1.2
+    action:
+      multiplier: 1.25
+      rule_flag: "WEEKEND_HIGH_VALUE_PRODUCT"
+      severity: "MEDIUM"
+      explanation: >
+        Hafta sonu yüksek tutarlı işlem, riskli ürün kategorisiyle birleşti.
+        Bu kombinasyon belirli fraud tiplerinde sıkça gözlemlenir.
+
+  - id: R007
+    name: "trusted_entity_low_risk"
+    description: >
+      Düşük velocity + normal tutar z-score'u: entity güvenilir profil gösteriyor.
+      Skoru aşağı çeken tek güvenlik kuralı.
+    priority: 3
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: card1_velocity_1d
+          op: "<="
+          value: 4.0
+        - field: card1_amt_zscore
+          op: "<="
+          value: 0.5
+        - field: TransactionAmt
+          op: "<="
+          value: 200.0
+    action:
+      multiplier: 0.75
+      rule_flag: "TRUSTED_ENTITY"
+      severity: "LOW"
+      explanation: >
+        Entity düşük velocity, tutarlı tutar davranışı ve düşük tutar gösteriyor.
+        Güvenilir profil: skor azaltıldı.
+
+  - id: R008
+    name: "night_velocity_spike"
+    description: >
+      Gece saatinde velocity spike — automated/bot işlem veya
+      çalınan kart ile hızlı alışveriş senaryosu.
+    priority: 1
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: tx_is_night
+          op: "=="
+          value: 1
+        - field: card1_velocity_1d
+          op: ">="
+          value: 10.0
+    action:
+      multiplier: 1.40
+      rule_flag: "NIGHT_VELOCITY_SPIKE"
+      severity: "HIGH"
+      explanation: >
+        Gece saatinde yoğun işlem trafiği tespit edildi.
+        Bot veya çalınan kart ile otomatik harcama sinyali.
+
+  - id: R009
+    name: "email_domain_velocity_risk"
+    description: >
+      Yüksek riskli e-posta domain + velocity spike kombinasyonu.
+      Bulk/synthetic account fraud veya phishing sonrası hesap kullanımı.
+    priority: 2
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: ctx_pemaildomain_fraud_lift
+          op: ">="
+          value: 1.3
+        - field: card1_velocity_1d
+          op: ">="
+          value: 8.0
+    action:
+      multiplier: 1.35
+      rule_flag: "EMAIL_DOMAIN_VELOCITY"
+      severity: "MEDIUM"
+      explanation: >
+        Riskli e-posta domain + yüksek günlük işlem hızı.
+        Sentetik hesap veya ele geçirilmiş hesap fraud pattern'i.
+
+  - id: R010
+    name: "extreme_high_value_single"
+    description: >
+      Tek başına aşırı yüksek tutar (top %1) — miktar bazlı anomali.
+      Basit ama güçlü sinyal; diğer kurallarla kombinasyonda çok daha güçlü.
+    priority: 2
+    enabled: true
+    conditions:
+      logic: AND
+      checks:
+        - field: TransactionAmt
+          op: ">="
+          value: 2000.0
+    action:
+      multiplier: 1.30
+      rule_flag: "EXTREME_HIGH_VALUE"
+      severity: "MEDIUM"
+      explanation: >
+        İşlem tutarı aşırı yüksek (≥ $2000). Tek başına kural; diğer
+        anomali sinyalleriyle birleştiğinde toplam skor belirgin artar.

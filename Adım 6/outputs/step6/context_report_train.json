@@ -1,0 +1,53 @@
+{
+  "total_rows": 590540,
+  "layers": {
+    "business_hours_multiplier": {
+      "affected_rows": 423363,
+      "affected_pct": 71.69,
+      "pushed_up": 233465,
+      "pushed_down": 189898,
+      "mean_multiplier": 1.0111
+    },
+    "weekend_multiplier": {
+      "affected_rows": 170171,
+      "affected_pct": 28.82,
+      "pushed_up": 85443,
+      "pushed_down": 84728,
+      "mean_multiplier": 1.0073
+    },
+    "trusted_entity_multiplier": {
+      "affected_rows": 174023,
+      "affected_pct": 29.47,
+      "pushed_up": 0,
+      "pushed_down": 174023,
+      "mean_multiplier": 0.9558
+    },
+    "product_type_multiplier": {
+      "affected_rows": 552841,
+      "affected_pct": 93.62,
+      "pushed_up": 113171,
+      "pushed_down": 439670,
+      "mean_multiplier": 0.9639
+    },
+    "high_value_night_multiplier": {
+      "affected_rows": 8153,
+      "affected_pct": 1.38,
+      "pushed_up": 8153,
+      "pushed_down": 0,
+      "mean_multiplier": 1.0041
+    }
+  },
+  "separation_before": 2.0092,
+  "separation_after": 2.0914,
+  "separation_delta": 0.0822,
+  "fraud_score_fraud_mean": 0.5947,
+  "fraud_score_nonfraud_mean": 0.296,
+  "context_adjusted_score_fraud_mean": 0.6169,
+  "context_adjusted_score_nonfraud_mean": 0.295,
+  "composite_multiplier_stats": {
+    "mean": 0.9436,
+    "min": 0.6177,
+    "max": 1.9734,
+    "median": 0.9
+  }
+}

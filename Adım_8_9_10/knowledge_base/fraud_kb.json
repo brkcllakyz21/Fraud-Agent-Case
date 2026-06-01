@@ -1,0 +1,170 @@
+[
+  {
+    "id": "KB001",
+    "category": "velocity_fraud",
+    "title": "High Velocity Transaction Pattern",
+    "content": "Transactions exceeding 10 operations per hour from a single card entity are flagged as high velocity fraud. This pattern is commonly observed in card-testing attacks where fraudsters verify stolen card details with small amounts before executing large transactions. Risk multiplier: 1.45. Applies when card1_velocity_1d > 10.",
+    "tags": ["velocity", "card_testing", "high_frequency"]
+  },
+  {
+    "id": "KB002",
+    "category": "nighttime_fraud",
+    "title": "Nighttime High-Value Transaction Policy",
+    "content": "Transactions occurring between 22:00 and 06:00 with amounts exceeding the 95th percentile are considered high risk. Legitimate cardholders rarely make large purchases during these hours. Combined with risky email domains or velocity spikes, the risk score is elevated significantly. Risk multiplier: 1.30.",
+    "tags": ["nighttime", "high_value", "temporal_anomaly"]
+  },
+  {
+    "id": "KB003",
+    "category": "email_domain_risk",
+    "title": "High-Risk Email Domain Classification",
+    "content": "Certain email domains are statistically associated with fraudulent activity. Domains with a fraud lift above 1.5 are classified as high-risk. These include anonymous email providers and domains frequently used for synthetic identity fraud. When combined with velocity anomalies, the risk is compounded. Risk multiplier: 1.35 for high-lift domains.",
+    "tags": ["email_domain", "synthetic_identity", "fraud_lift"]
+  },
+  {
+    "id": "KB004",
+    "category": "card_type_risk",
+    "title": "Card Network Risk Classification",
+    "content": "Specific card networks (card4 type) show elevated fraud rates in e-commerce transactions. Cards with a fraud lift above 1.2 on the card4 dimension trigger additional scrutiny. This is often linked to prepaid card usage or cards issued by high-risk financial institutions. Risk multiplier: 1.35.",
+    "tags": ["card_type", "prepaid", "card4", "network_risk"]
+  },
+  {
+    "id": "KB005",
+    "category": "amount_anomaly",
+    "title": "Statistical Amount Anomaly Detection",
+    "content": "Transactions where the Z-score of the transaction amount exceeds 3.0 relative to the card entity's historical behavior indicate a significant deviation. This pattern is consistent with account takeover fraud where the fraudster makes one large unauthorized transaction. Risk multiplier: 1.40.",
+    "tags": ["amount_zscore", "account_takeover", "statistical_anomaly"]
+  },
+  {
+    "id": "KB006",
+    "category": "product_risk",
+    "title": "High-Risk Product Category Policy",
+    "content": "Certain product categories (ProductCD) exhibit elevated fraud rates. Products that can be resold quickly (electronics, gift cards) have historically higher fraud lift values. When combined with card6 type anomalies, these transactions require enhanced verification. Risk multiplier: 1.30.",
+    "tags": ["product_category", "resale_fraud", "card6", "ProductCD"]
+  },
+  {
+    "id": "KB007",
+    "category": "trusted_entity",
+    "title": "Trusted Entity Reduction Policy",
+    "content": "Entities demonstrating consistent, low-velocity transaction behavior with stable transaction amounts over time are classified as trusted. For trusted entities, the fraud score is reduced to avoid false positives. Criteria: velocity_1d <= 6 AND amount Z-score <= 0.5. Risk multiplier: 0.75 (reduction).",
+    "tags": ["trusted_entity", "false_positive_reduction", "behavioral_consistency"]
+  },
+  {
+    "id": "KB008",
+    "category": "weekend_pattern",
+    "title": "Weekend High-Value Transaction Risk",
+    "content": "High-value transactions on weekends involving risky product categories show elevated fraud rates. Fraudsters often exploit reduced monitoring during weekends to conduct large unauthorized transactions. This pattern is especially prevalent in card-not-present e-commerce fraud. Risk multiplier: 1.25.",
+    "tags": ["weekend", "high_value", "card_not_present", "ecommerce"]
+  },
+  {
+    "id": "KB009",
+    "category": "extreme_amount",
+    "title": "Extreme Transaction Amount Policy",
+    "content": "Transactions exceeding $2000 in a single operation are subject to enhanced fraud review regardless of other signals. Amounts at this threshold are consistent with wire transfer fraud, luxury goods fraud, and business account compromise. These transactions require manual review if other risk signals are present. Risk multiplier: 1.30.",
+    "tags": ["extreme_amount", "wire_fraud", "luxury_goods", "business_compromise"]
+  },
+  {
+    "id": "KB010",
+    "category": "composite_risk",
+    "title": "Multi-Signal Composite Fraud Indicator",
+    "content": "When multiple risk signals co-occur — such as nighttime timing, high velocity, risky email domain, and high transaction amount — the composite fraud probability increases non-linearly. Each additional signal approximately doubles the posterior fraud probability. Transactions triggering 3 or more HIGH severity rules should be escalated for immediate review.",
+    "tags": ["composite_risk", "multi_signal", "escalation", "high_severity"]
+  },
+  {
+    "id": "KB011",
+    "category": "identity_mismatch",
+    "title": "Identity Field Mismatch Pattern",
+    "content": "Discrepancies between billing address, shipping address, and device fingerprint fields (addr1, addr2, DeviceType) are strong indicators of identity fraud. When address diversity scores are high for a card entity, it suggests the card is being used across multiple stolen identities. This pattern is associated with card-not-present fraud rings.",
+    "tags": ["identity_mismatch", "address_diversity", "device_fingerprint", "fraud_ring"]
+  },
+  {
+    "id": "KB012",
+    "category": "temporal_velocity",
+    "title": "Intra-Hour Velocity Spike Policy",
+    "content": "A sudden spike in transaction count within a 1-hour window, especially when preceded by a period of inactivity, is a strong signal of automated fraud. This pattern is characteristic of bot-driven card testing or credential stuffing attacks. Velocity exceeding 3x the entity's historical hourly average triggers this rule.",
+    "tags": ["velocity_1h", "bot_activity", "card_testing", "intra_hour"]
+  },
+  {
+    "id": "KB013",
+    "category": "general_policy",
+    "title": "Fraud Score Interpretation Guidelines",
+    "content": "Fraud scores are interpreted as follows: 0.0-0.3 = Low risk (monitor only), 0.3-0.5 = Medium risk (soft decline or step-up authentication), 0.5-0.7 = High risk (block and review), 0.7-1.0 = Very high risk (immediate block and alert). All scores are produced by an ensemble of statistical, behavioral, temporal, and rule-based signals.",
+    "tags": ["score_interpretation", "decision_threshold", "policy"]
+  },
+  {
+    "id": "KB014",
+    "category": "general_policy",
+    "title": "False Positive Management Policy",
+    "content": "False positive rate is monitored continuously. Trusted entities and transactions with strong behavioral consistency signals are given score reductions to minimize customer friction. Any transaction blocked by automated systems can be appealed within 24 hours. Repeated false positives for a card entity trigger a trusted entity re-evaluation.",
+    "tags": ["false_positive", "customer_friction", "appeal", "trusted_entity"]
+  },
+  {
+    "id": "KB015",
+    "category": "data_quality",
+    "title": "Missing Identity Field Risk Elevation",
+    "content": "Transactions with a high proportion of missing identity fields (id_01 through id_38) are associated with elevated fraud risk. Fraudsters often submit transactions with minimal identity information to avoid detection. A missing rate above 50% in identity fields elevates the base fraud score by a factor of 1.15.",
+    "tags": ["missing_data", "identity_fields", "data_quality", "anonymization"]
+  },
+  {
+    "id": "KB016",
+    "category": "model_signal",
+    "title": "Column-Level Statistical Anomaly Signal (AUC 0.73)",
+    "content": "The column_score_mean signal is the strongest fraud predictor in this detection system with AUC 0.73 and a model weight of 37.1%. It captures per-column statistical deviations aggregated across all numeric features. A high column_score_mean (above 0.6) indicates that multiple feature dimensions simultaneously deviate from expected distributions — a hallmark of fraudulent transactions that attempt to appear normal in any single dimension but fail across the aggregate. When column_score_mean exceeds 0.7, the transaction should be treated as high priority regardless of other signals. This signal alone contributes 37.4% of the final fraud score in the weighted ensemble.",
+    "tags": ["column_score_mean", "statistical_anomaly", "ensemble", "auc_signal", "high_weight"]
+  },
+  {
+    "id": "KB017",
+    "category": "model_signal",
+    "title": "Column-Level Maximum Deviation Signal (AUC 0.70)",
+    "content": "The column_score_max signal captures the single largest statistical deviation across all feature columns for a transaction, with AUC 0.70 and a model weight of 32.5%. Unlike column_score_mean which averages across columns, column_score_max identifies the worst-case feature anomaly. A high column_score_max (above 0.65) indicates at least one feature dimension is severely anomalous — consistent with targeted manipulation of a specific transaction attribute such as amount, timing, or device fingerprint. Combined with column_score_mean, these two signals together account for 69.8% of the ensemble weight, making them the dominant fraud detection layer.",
+    "tags": ["column_score_max", "max_deviation", "ensemble", "auc_signal", "high_weight"]
+  },
+  {
+    "id": "KB018",
+    "category": "model_signal",
+    "title": "Multivariate Isolation Forest Anomaly (AUC 0.64)",
+    "content": "The multivariate_score is produced by an Isolation Forest model (contamination=0.035) operating on the full feature space simultaneously, with AUC 0.64 and model weight of 22.7%. It detects transactions that are anomalous in the joint distribution of features — patterns that column-level analysis may miss. A high multivariate_score (above 0.6) combined with elevated column scores strongly suggests coordinated feature manipulation. Isolation Forest assigns shorter path lengths to anomalies, meaning fraudulent transactions are isolated more quickly from the normal population.",
+    "tags": ["multivariate_score", "isolation_forest", "joint_distribution", "ensemble"]
+  },
+  {
+    "id": "KB019",
+    "category": "model_signal",
+    "title": "Entity Behavioral Anomaly Signal (AUC 0.53)",
+    "content": "The entity_score measures deviation from an entity's own historical transaction profile, with AUC 0.53 and model weight of 4.85%. While individually weak, entity_score becomes significant when combined with strong column or multivariate signals. A transaction that is anomalous both statistically (column signals) and relative to the entity's own history (entity_score) is highly suspicious — the dual anomaly pattern is associated with account takeover fraud where a legitimate account is suddenly used in an atypical manner. Low entity_score with high column scores may indicate a new card with no history being used fraudulently.",
+    "tags": ["entity_score", "behavioral_baseline", "account_takeover", "entity_history"]
+  },
+  {
+    "id": "KB020",
+    "category": "model_signal",
+    "title": "Temporal Pattern Anomaly Signal (AUC 0.52)",
+    "content": "The temporal_score captures deviations from expected transaction timing patterns for an entity, with AUC 0.52 and model weight of 2.86%. Though the weakest individual signal, temporal anomalies are meaningful when co-occurring with other high signals. A transaction occurring outside an entity's typical active hours (e.g., nighttime for a daytime spender) with an elevated temporal_score reinforces fraud likelihood. The combination of temporal_score above 0.5 with nighttime flag and high velocity is a particularly strong composite indicator.",
+    "tags": ["temporal_score", "timing_anomaly", "behavioral_pattern", "time_based"]
+  },
+  {
+    "id": "KB021",
+    "category": "model_signal",
+    "title": "Ensemble Signal Interpretation and Score Dominance",
+    "content": "The fraud detection ensemble assigns weights based on individual AUC performance: column_score_mean (37.1%), column_score_max (32.5%), multivariate_score (22.7%), entity_score (4.85%), temporal_score (2.86%). The column-based signals dominate because statistical feature deviations are the most reliable fraud indicators in this dataset. When interpreting a fraud score, column signals above 0.6 are the primary concern. Entity and temporal signals below 0.5 with high column signals still warrants escalation — weak behavioral signals do not exonerate a transaction when statistical anomalies are severe. The separation ratio between fraud and non-fraud populations is 2.01x at the ensemble level.",
+    "tags": ["ensemble_weights", "auc", "score_dominance", "separation_ratio", "interpretation"]
+  },
+  {
+    "id": "KB022",
+    "category": "feature_combination",
+    "title": "High-Risk Feature Combination: Column Anomaly + Nighttime + Velocity",
+    "content": "Analysis of the IEEE-CIS dataset reveals that transactions combining high column_score_mean (above 0.6), nighttime occurrence (tx_is_night=1), and elevated card velocity (card1_velocity_1d > 8) show the highest fraud concentration. This triple combination reflects the typical account takeover pattern: a compromised account (statistical deviation from normal profile) used aggressively (high velocity) during low-monitoring hours (nighttime). The context adjustment engine applies a cumulative multiplier of up to 1.495x (business hours 1.15 × high-value night 1.30) for this pattern.",
+    "tags": ["feature_combination", "column_score_mean", "nighttime", "velocity", "account_takeover"]
+  },
+  {
+    "id": "KB023",
+    "category": "feature_combination",
+    "title": "High-Risk Feature Combination: Amount Z-Score + Column Score Alignment",
+    "content": "When card1_amt_zscore exceeds 2.0 and column_score_max simultaneously exceeds 0.65, the transaction exhibits both entity-relative and population-level amount anomalies. This dual-layer amount signal is one of the strongest fraud indicators: it means the amount is unusual both for this specific card's history AND relative to the broader transaction population. This pattern is consistent with fraudsters who research typical transaction amounts for a stolen card but still cannot perfectly mimic the statistical distribution. Escalate immediately when both thresholds are exceeded simultaneously.",
+    "tags": ["amount_zscore", "column_score_max", "dual_anomaly", "amount_manipulation"]
+  },
+  {
+    "id": "KB024",
+    "category": "feature_combination",
+    "title": "Weak Entity Signal with Strong Column Signal: New Card Fraud Pattern",
+    "content": "Transactions where entity_score is low (below 0.3) but column_score_mean is high (above 0.6) indicate a card with limited transaction history being used in a statistically anomalous way. This is characteristic of newly issued fraudulent cards or recently stolen cards used for the first time. The entity baseline cannot be established with few transactions, so entity_score naturally falls back to global averages — masking the true risk. In this scenario, column and multivariate signals are the primary decision inputs. Do not discount fraud risk based on low entity_score alone when column signals are elevated.",
+    "tags": ["new_card", "entity_fallback", "column_score_mean", "limited_history", "first_use_fraud"]
+  }
+]

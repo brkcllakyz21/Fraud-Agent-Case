@@ -1,0 +1,24 @@
+{
+  "mode": "auc",
+  "weights": {
+    "multivariate_score": 0.227,
+    "entity_score": 0.0485,
+    "column_score_max": 0.3251,
+    "temporal_score": 0.0286,
+    "column_score_mean": 0.3709
+  },
+  "auc_scores": {
+    "multivariate_score": 0.6413,
+    "entity_score": 0.5302,
+    "column_score_max": 0.7024,
+    "temporal_score": 0.5178,
+    "column_score_mean": 0.7309
+  },
+  "contribution": {
+    "multivariate_score": 0.2153,
+    "entity_score": 0.049,
+    "column_score_max": 0.3244,
+    "temporal_score": 0.0376,
+    "column_score_mean": 0.3737
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "total_rows": 590540,
+    "total_rules": 10,
+    "conflict_resolution": "max_multiplier"
+  },
+  "rule_stats": [
+    {
+      "rule_id": "R001",
+      "rule_name": "high_value_night_foreign_email",
+      "priority": 1,
+      "severity": "HIGH",
+      "multiplier": 1.5,
+      "n_triggered": 1798,
+      "pct_triggered": 0.3,
+      "fraud_rate": 0.0528,
+      "fraud_lift": 1.51
+    },
+    {
+      "rule_id": "R002",
+      "rule_name": "velocity_spike_high_amount",
+      "priority": 1,
+      "severity": "HIGH",
+      "multiplier": 1.45,
+      "n_triggered": 17051,
+      "pct_triggered": 2.89,
+      "fraud_rate": 0.0481,
+      "fraud_lift": 1.374
+    },
+    {
+      "rule_id": "R003",
+      "rule_name": "risky_card_type",
+      "priority": 2,
+      "severity": "MEDIUM",
+      "multiplier": 1.35,
+      "n_triggered": 4200,
+      "pct_triggered": 0.71,
+      "fraud_rate": 0.0886,
+      "fraud_lift": 2.531
+    },
+    {
+      "rule_id": "R004",
+      "rule_name": "risky_card_product_type",
+      "priority": 2,
+      "severity": "MEDIUM",
+      "multiplier": 1.3,
+      "n_triggered": 51102,
+      "pct_triggered": 8.65,
+      "fraud_rate": 0.0646,
+      "fraud_lift": 1.846
+    },
+    {
+      "rule_id": "R005",
+      "rule_name": "amount_zscore_extreme",
+      "priority": 1,
+      "severity": "HIGH",
+      "multiplier": 1.4,
+      "n_triggered": 10654,
+      "pct_triggered": 1.8,
+      "fraud_rate": 0.0457,
+      "fraud_lift": 1.306
+    },
+    {
+      "rule_id": "R006",
+      "rule_name": "weekend_high_value_risky_product",
+      "priority": 2,
+      "severity": "MEDIUM",
+      "multiplier": 1.25,
+      "n_triggered": 174,
+      "pct_triggered": 0.03,
+      "fraud_rate": 0.2931,
+      "fraud_lift": 8.377
+    },
+    {
+      "rule_id": "R007",
+      "rule_name": "trusted_entity_low_risk",
+      "priority": 3,
+      "severity": "LOW",
+      "multiplier": 0.75,
+      "n_triggered": 197504,
+      "pct_triggered": 33.44,
+      "fraud_rate": 0.026,
+      "fraud_lift": 0.743
+    },
+    {
+      "rule_id": "R008",
+      "rule_name": "night_velocity_spike",
+      "priority": 1,
+      "severity": "HIGH",
+      "multiplier": 1.4,
+      "n_triggered": 60288,
+      "pct_triggered": 10.21,
+      "fraud_rate": 0.0385,
+      "fraud_lift": 1.1
+    },
+    {
+      "rule_id": "R009",
+      "rule_name": "email_domain_velocity_risk",
+      "priority": 2,
+      "severity": "MEDIUM",
+      "multiplier": 1.35,
+      "n_triggered": 27966,
+      "pct_triggered": 4.74,
+      "fraud_rate": 0.0527,
+      "fraud_lift": 1.507
+    },
+    {
+      "rule_id": "R010",
+      "rule_name": "extreme_high_value_single",
+      "priority": 2,
+      "severity": "MEDIUM",
+      "multiplier": 1.3,
+      "n_triggered": 2040,
+      "pct_triggered": 0.35,
+      "fraud_rate": 0.0206,
+      "fraud_lift": 0.588
+    }
+  ],
+  "separation_metrics": {
+    "rule_adjusted_score": {
+      "fraud_mean": 0.6102,
+      "nonfraud_mean": 0.2966,
+      "separation_ratio": 2.0572
+    }
+  },
+  "severity_distribution": {
+    "NONE": 259221,
+    "LOW": 191362,
+    "HIGH": 82461,
+    "MEDIUM": 57496
+  },
+  "rules_triggered_per_row_dist": {
+    "0": 259221,
+    "1": 297270,
+    "2": 28370,
+    "3": 4287,
+    "4": 1115,
+    "5": 223,
+    "6": 47,
+    "7": 7
+  }
+}

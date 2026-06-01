@@ -1,0 +1,25 @@
+{
+  "features": [
+    "TransactionID",
+    "TransactionAmt",
+    "rule_adjusted_score",
+    "context_adjusted_score",
+    "fraud_score",
+    "tx_hour",
+    "card1_velocity_1d",
+    "card1_amt_zscore",
+    "ctx_pemaildomain_fraud_lift",
+    "ctx_productcd_fraud_lift",
+    "column_score_mean",
+    "column_score_max",
+    "multivariate_score",
+    "entity_score",
+    "rel_night_high_amt",
+    "ctx_amt_global_zscore",
+    "ctx_amt_log"
+  ],
+  "n_features": 17,
+  "contamination": 0.035,
+  "score_min": 0.5,
+  "score_max": 0.5
+}
